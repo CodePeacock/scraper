@@ -3,7 +3,7 @@ import logging
 import tracemalloc
 from typing import List, Tuple
 
-from scripts.property_market_scraper import PropertyMarketIdentifier
+from modules.property_market_scraper import PropertyMarketIdentifier
 
 
 def get_user_input() -> Tuple[str, List[str]]:
