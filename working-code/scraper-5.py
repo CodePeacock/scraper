@@ -16,7 +16,24 @@ from bs4 import BeautifulSoup
 
 
 class PropertyMarketIdentifier:
+    """
+    Class to scrape property market data from various websites.
+
+    Args:
+        websites (List[str]): List of websites to scrape data from.
+        city (str): The city for which data is to be scraped.
+        output_dir (str, optional): Directory to save scraped data. Defaults to "data".
+    """
+
     def __init__(self, websites: List[str], city: str, output_dir: str = "data"):
+        """
+        Initialize the PropertyMarketIdentifier instance.
+
+        Args:
+            websites (List[str]): List of websites to scrape data from.
+            city (str): The city for which data is to be scraped.
+            output_dir (str, optional): Directory to save scraped data. Defaults to "data".
+        """
         self.websites = websites
         self.city = city
         self.output_dir = output_dir
@@ -32,12 +49,30 @@ class PropertyMarketIdentifier:
         )
 
     async def fetch_url(self, url: str) -> str:
+        """
+        Fetch the HTML content of a given URL asynchronously.
+
+        Args:
+            url (str): The URL to fetch.
+
+        Returns:
+            str: The HTML content of the URL.
+        """
         async with aiohttp.ClientSession() as session:
             async with session.get(url, timeout=10) as response:
                 response.raise_for_status()
                 return await response.text()
 
     async def scrape_properties(self, website: str) -> List[dict]:
+        """
+        Scrape property data from a specific website asynchronously.
+
+        Args:
+            website (str): The website to scrape data from.
+
+        Returns:
+            List[dict]: List of scraped property data as dictionaries.
+        """
         # Define a cache key
         cache_key = f"{website}_{self.city}"
 
@@ -78,7 +113,7 @@ class PropertyMarketIdentifier:
                     property_data_list.append(
                         {"owner": owner, "price": price, "property_name": property_name}
                     )
-                return property_data_list
+                # return property_data_list
 
             elif website == "magicbricks":
                 # Existing MagicBricks scraping logic
@@ -173,6 +208,9 @@ class PropertyMarketIdentifier:
             return []
 
     async def scrape_properties_parallel(self):
+        """
+        Scrape property data from multiple websites in parallel.
+        """
         if "all" in self.websites:
             websites_to_scrape = ["magicbricks", "makaan", "commonfloor"]
         else:
@@ -195,6 +233,13 @@ class PropertyMarketIdentifier:
             logging.error(f"Error saving data to CSV: {str(e)}")
 
     async def save_to_csv(self, data: List[dict], filename: str):
+        """
+        Save property data to a CSV file asynchronously.
+
+        Args:
+            data (List[dict]): List of property data as dictionaries.
+            filename (str): The name of the CSV file to save.
+        """
         try:
             df = pd.DataFrame(data)
             async with aiofiles.open(filename, mode="w", encoding="utf-8") as f:
@@ -205,6 +250,12 @@ class PropertyMarketIdentifier:
 
 
 def get_user_input() -> Tuple[str, List[str]]:
+    """
+    Get user input for city and websites to scrape.
+
+    Returns:
+        Tuple[str, List[str]]: Tuple containing the city and list of websites to scrape.
+    """
     city = input("Enter the city you want to scrape data for: ").strip().lower()
     websites = (
         input(
