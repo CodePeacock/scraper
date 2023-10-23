@@ -99,10 +99,7 @@ class PropertyMarketIdentifier:
                     # print(owner)
                     price = listing.find("tbody")
                     price = price.find_all("td")
-                    # print(price)
-                    icon_inr = price[0].find("i", class_="icon-inr")
-                    # print(icon_inr)
-                    if icon_inr:
+                    if icon_inr := price[0].find("i", class_="icon-inr"):
                         print(price)
                     property_info = listing.find("div", class_="snb-projecttile-top")
                     # Get text from h2 tag inside this div
@@ -113,7 +110,7 @@ class PropertyMarketIdentifier:
                     property_data_list.append(
                         {"owner": owner, "price": price, "property_name": property_name}
                     )
-                # return property_data_list
+                        # return property_data_list
 
             elif website == "magicbricks":
                 # Existing MagicBricks scraping logic

@@ -93,11 +93,11 @@ class PropertyMarketIdentifier:
             html = await self.fetch_url(url)
 
             soup = BeautifulSoup(html, "lxml")
-            property_data_list = []
-
             if website == "commonfloor":
                 # CommonFloor scraping logic
                 listings = soup.find_all("div", class_="snb-content-list")
+                property_data_list = []
+
                 for listing in listings:
                     owner = listing.find("h3", class_="proSnbp").text.strip()
                     price = listing.find("tbody")
@@ -111,7 +111,7 @@ class PropertyMarketIdentifier:
                     )
                 return property_data_list
 
-            # Remaining scraping logic for other websites...
+                # Remaining scraping logic for other websites...
 
         except (aiohttp.ClientError, asyncio.TimeoutError) as e:
             logging.error(f"Error scraping {website.capitalize()}: {str(e)}")
